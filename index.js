@@ -59,7 +59,7 @@ app.get("/create-event", (req, res) => {
 
     scheduleEvent(name, startTime, endTime, description, imageUrl);
 
-    res.send("Event creation process started. Refer to terminal for instructions!")
+    res.send("Event creation process started. Refer to terminal for instructions!");
 })
 
 app.listen(PORT, () => {
