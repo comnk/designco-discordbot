@@ -1,11 +1,14 @@
 const { Client, Events, GatewayIntentBits } = require('discord.js');
 const dotenv = require('dotenv');
+const express = require('express');
 const axios = require('axios');
 const prompt=require("prompt-sync")({sigint:true});
 
 dotenv.config();
 
 const token = process.env.DISCORD_TOKEN;
+const app = express();
+const PORT = 3000;
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -45,9 +48,7 @@ async function scheduleEvent(name, startTime, endTime, description, imageUrl) {
     }
 }
 
-client.once(Events.ClientReady, readyClient => {
-    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-
+app.get("/create-event", (req, res) => {
     let name = prompt("Name of event: ");
     let description = prompt("Provide description of event: ");
     const startTime = new Date('2024-08-26T15:00:00Z');
@@ -57,6 +58,16 @@ client.once(Events.ClientReady, readyClient => {
     const imageUrl = "https://th.bing.com/th/id/R.b278428a21699d82d8bda5ecff4d3fba?rik=VCLWUCs8MAqrJw&pid=ImgRaw&r=0";
 
     scheduleEvent(name, startTime, endTime, description, imageUrl);
+
+    res.send("Event creation process started. Refer to terminal for instructions!")
+})
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+})
+
+client.once(Events.ClientReady, readyClient => {
+    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
 client.login(token);
