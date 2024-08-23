@@ -16,7 +16,7 @@ console.log(token);
 
 async function scheduleEvent(name, startTime, endTime, description) {
     try {
-        const guild = await client.guilds.fetch("1270871231133913228");
+        const guild = await client.guilds.fetch(process.env.GUILD_ID);
 
         const scheduledEvent = await guild.scheduledEvents.create({
             name: name,
@@ -28,7 +28,10 @@ async function scheduleEvent(name, startTime, endTime, description) {
             description: description
         });
 
-        console.log("Event scheduled");
+        const channel = await client.channels.fetch(process.env.CHANNEL_ID);
+        await channel.send(`@everyone 🎉 A new event "${scheduledEvent.name}" has been scheduled! It will start on <t:${Math.floor(startTime.getTime() / 1000)}:F>.`);
+
+        console.log("Event successfully scheduled!");
 
     } catch (error) {
         console.error("Error creating scheduled event: " + error);
